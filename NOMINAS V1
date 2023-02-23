@@ -1,0 +1,57 @@
+import datetime
+
+class Empleado:
+    def __init__(self, nombre, salario_base):
+        self.nombre = nombre
+        self.salario_base = salario_base
+        self.horas_extra = 0
+        self.bonificaciones = 0
+        self.descuentos = 0
+
+    def calcular_salario_bruto(self):
+        horas_normales = 160 # número de horas normales trabajadas en un mes
+        salario_hora = self.salario_base / horas_normales
+        salario_bruto = self.salario_base + self.horas_extra * salario_hora + self.bonificaciones
+        return salario_bruto
+
+    def calcular_deducciones(self):
+        seguro_social = self.salario_base * 0.04 # 4% del salario base
+        isr = self.salario_base * 0.10 # 10% del salario base
+        deducciones = self.descuentos + seguro_social + isr
+        return deducciones
+
+    def calcular_salario_neto(self):
+        salario_bruto = self.calcular_salario_bruto()
+        deducciones = self.calcular_deducciones()
+        salario_neto = salario_bruto - deducciones
+        return salario_neto
+
+class Nomina:
+    def __init__(self, empleados):
+        self.empleados = empleados
+        self.fecha = datetime.date.today()
+
+    def generar_nomina(self):
+        print(f"Nomina para el mes de {self.fecha.strftime('%B %Y')}:\n")
+        for empleado in self.empleados:
+            salario_bruto = empleado.calcular_salario_bruto()
+            deducciones = empleado.calcular_deducciones()
+            salario_neto = empleado.calcular_salario_neto()
+            print(f"Empleado: {empleado.nombre}")
+            print(f"Salario base: ${empleado.salario_base:.2f}")
+            print(f"Horas extra: {empleado.horas_extra}")
+            print(f"Bonificaciones: ${empleado.bonificaciones:.2f}")
+            print(f"Descuentos: ${empleado.descuentos:.2f}")
+            print(f"Salario bruto: ${salario_bruto:.2f}")
+            print(f"Deducciones: ${deducciones:.2f}")
+            print(f"Salario neto: ${salario_neto:.2f}")
+            print("\n")
+
+empleados = [
+    Empleado("Juan Perez", 15000),
+    Empleado("Maria Garcia", 20000),
+    Empleado("Pedro Ramirez", 18000)
+]
+
+nomina = Nomina(empleados)
+nomina.generar_nomina()
